@@ -19,26 +19,26 @@ export class HeroService {
 
   public getHeroes(): Observable<Hero[]> {
     if (environment.production) {
+      this.messageService.add('HeroService: fetched heroes');
+      return of(HEROES);
+    } else {
       return this.http
         .get<Hero[]>(this.heroesUrl)
         .pipe(tap((heroes) => this.log(`fetched ${heroes.length} hero(es)`)));
-    } else {
-      this.messageService.add('HeroService: fetched heroes');
-      return of(HEROES);
     }
   }
 
   getHero(id: number): Observable<Hero> {
     if (environment.production) {
+      const hero = HEROES.find(hero => hero.id === id)!;
+      this.messageService.add(`HeroService: fetched hero id=${id}`)
+      return of(hero);
+    } else {
       return this.http
         .get<Hero>(`${this.heroesUrl}/${id}`)
         .pipe(
           tap((hero) => this.log(`fetched hero id=${id} and name=${hero.name}`))
         );
-    } else {
-      const hero = HEROES.find(hero => hero.id === id)!;
-      this.messageService.add(`HeroService: fetched hero id=${id}`)
-      return of(hero);
     }
   }
 
