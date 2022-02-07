@@ -8,8 +8,9 @@ import { HeroService } from '../hero.service';
   styleUrls: ['./heroes.component.scss'],
 })
 export class HeroesComponent implements OnInit {
+  public displayedColumns: string[] = ['id', 'name'];
   public heroes: Hero[] = [];
-  public selectedHero?: Hero;
+
   constructor(private heroService: HeroService) {}
 
   ngOnInit(): void {
