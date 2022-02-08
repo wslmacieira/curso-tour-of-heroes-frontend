@@ -10,6 +10,7 @@ import { HEROES } from './mock-heroes';
   providedIn: 'root',
 })
 export class HeroService {
+
   private heroesUrl = `${environment.baseUrl}/heroes`;
 
   constructor(
@@ -17,7 +18,7 @@ export class HeroService {
     private messageService: MessageService
   ) {}
 
-  public getHeroes(): Observable<Hero[]> {
+  public getAll(): Observable<Hero[]> {
     if (environment.production) {
       this.messageService.add('HeroService: fetched heroes');
       return of(HEROES);
@@ -28,7 +29,7 @@ export class HeroService {
     }
   }
 
-  getHero(id: number): Observable<Hero> {
+  getOne(id: number): Observable<Hero> {
     if (environment.production) {
       const hero = HEROES.find(hero => hero.id === id)!;
       this.messageService.add(`HeroService: fetched hero id=${id}`)
@@ -40,6 +41,12 @@ export class HeroService {
           tap((hero) => this.log(`fetched hero id=${id} and name=${hero.name}`))
         );
     }
+  }
+
+  update(hero: Hero): Observable<Hero> {
+    return this.http.put<Hero>(`${this.heroesUrl}/${hero.id}`, hero).pipe(
+      tap((hero) => this.log(`updated hero id=${hero.id} and name=${hero.name}`))
+    );
   }
 
   private log(message: string): void {
