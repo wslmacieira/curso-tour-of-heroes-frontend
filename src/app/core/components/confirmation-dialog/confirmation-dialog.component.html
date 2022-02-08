@@ -1,0 +1,9 @@
+<mat-dialog-content>
+    <p class="mat-body-1">{{ data.content }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button [matDialogClose]="false">{{ data.cancelText }}</button>
+    <button mat-button [matDialogClose]="true">{{ data.confirmText }}</button>
+
+</mat-dialog-actions>

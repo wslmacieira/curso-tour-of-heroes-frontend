@@ -55,6 +55,10 @@ export class HeroService {
     );
   }
 
+  public delete(hero: Hero): Observable<any> {
+    return this.http.delete<any>(`${this.heroesUrl}/${hero.id}`)
+  }
+
   private descHeroAttributes(hero: Hero): string {
     return `hero id=${hero.id} and name=${hero.name}`;
   }
