@@ -29,7 +29,7 @@ export class HeroService {
     }
   }
 
-  getOne(id: number): Observable<Hero> {
+  public getOne(id: number): Observable<Hero> {
     if (environment.production) {
       const hero = HEROES.find(hero => hero.id === id)!;
       this.messageService.add(`HeroService: fetched hero id=${id}`)
@@ -38,15 +38,25 @@ export class HeroService {
       return this.http
         .get<Hero>(`${this.heroesUrl}/${id}`)
         .pipe(
-          tap((hero) => this.log(`fetched hero id=${id} and name=${hero.name}`))
+          tap((hero) => this.log(`fetched ${this.descHeroAttributes(hero)}`))
         );
     }
   }
 
-  update(hero: Hero): Observable<Hero> {
-    return this.http.put<Hero>(`${this.heroesUrl}/${hero.id}`, hero).pipe(
-      tap((hero) => this.log(`updated hero id=${hero.id} and name=${hero.name}`))
+  public create(hero: Hero): Observable<Hero> {
+    return this.http.post<Hero>(this.heroesUrl, hero).pipe(
+      tap((hero) => this.log(`created ${this.descHeroAttributes(hero)}`))
     );
+  }
+
+  public update(hero: Hero): Observable<Hero> {
+    return this.http.put<Hero>(`${this.heroesUrl}/${hero.id}`, hero).pipe(
+      tap((hero) => this.log(`updated ${this.descHeroAttributes(hero)}`))
+    );
+  }
+
+  private descHeroAttributes(hero: Hero): string {
+    return `hero id=${hero.id} and name=${hero.name}`;
   }
 
   private log(message: string): void {
