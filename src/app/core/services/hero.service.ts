@@ -10,7 +10,6 @@ import { HEROES } from './mock-heroes';
   providedIn: 'root',
 })
 export class HeroService {
-
   private heroesUrl = `${environment.baseUrl}/heroes`;
 
   constructor(
@@ -31,8 +30,8 @@ export class HeroService {
 
   public getOne(id: number): Observable<Hero> {
     if (environment.production) {
-      const hero = HEROES.find(hero => hero.id === id)!;
-      this.messageService.add(`HeroService: fetched hero id=${id}`)
+      const hero = HEROES.find((hero) => hero.id === id)!;
+      this.messageService.add(`HeroService: fetched hero id=${id}`);
       return of(hero);
     } else {
       return this.http
@@ -43,20 +42,37 @@ export class HeroService {
     }
   }
 
-  public create(hero: Hero): Observable<Hero> {
-    return this.http.post<Hero>(this.heroesUrl, hero).pipe(
-      tap((hero) => this.log(`created ${this.descHeroAttributes(hero)}`))
+  public search(term: string): Observable<Hero[]> {
+    if (!term.trim()) {
+      return of([]);
+    }
+    return this.http.get<Hero[]>(`${this.heroesUrl}?name=${term}`).pipe(
+      tap((heroes) => {
+        heroes.length
+          ? this.log(`found ${heroes.length} hero(es) matching "${term}"`)
+          : this.log(`no heroes matching "${term}"`);
+      })
     );
+  }
+
+  public create(hero: Hero): Observable<Hero> {
+    return this.http
+      .post<Hero>(this.heroesUrl, hero)
+      .pipe(
+        tap((hero) => this.log(`created ${this.descHeroAttributes(hero)}`))
+      );
   }
 
   public update(hero: Hero): Observable<Hero> {
-    return this.http.put<Hero>(`${this.heroesUrl}/${hero.id}`, hero).pipe(
-      tap((hero) => this.log(`updated ${this.descHeroAttributes(hero)}`))
-    );
+    return this.http
+      .put<Hero>(`${this.heroesUrl}/${hero.id}`, hero)
+      .pipe(
+        tap((hero) => this.log(`updated ${this.descHeroAttributes(hero)}`))
+      );
   }
 
   public delete(hero: Hero): Observable<any> {
-    return this.http.delete<any>(`${this.heroesUrl}/${hero.id}`)
+    return this.http.delete<any>(`${this.heroesUrl}/${hero.id}`);
   }
 
   private descHeroAttributes(hero: Hero): string {

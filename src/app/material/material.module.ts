@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -24,11 +25,12 @@ const MODULES = [
   MatTableModule,
   MatProgressSpinnerModule,
   MatSnackBarModule,
-  MatDialogModule
-]
+  MatDialogModule,
+  MatAutocompleteModule,
+];
 
 @NgModule({
   imports: [MODULES],
-  exports: [MODULES]
+  exports: [MODULES],
 })
-export class MaterialModule { }
+export class MaterialModule {}
